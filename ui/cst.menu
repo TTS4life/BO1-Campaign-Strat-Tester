@@ -1,0 +1,118 @@
+
+#include "ui/menudef.h"
+
+#define HUD_ALPHA 0.65
+#define HUD_FOREGROUND_ALPHA 0.75
+#define DPAD_ICON_ALPHA 0.65
+
+/*
+	Items are grouped together using a menuDef. A menudef typically has a name, a rect, a fullscreen option and a visible option
+	menuDef {
+		name "my_cool_menu_def"
+		rect x-pos y-pos width height x-alignment y-alignment
+		fullscreen 0|1
+		visible (boolean expression)
+	}
+
+	within these menuDefs are itemDefs, these contain options and parameter specific to a hud element
+	itemDef {
+		name "my_cool_item_def"
+		rect x-pos y-pos width height x-alignment y-alignment
+		fullsceen (bool (expression)))
+		visible (bool or boolean expression)
+		forecolor r g b a ?
+		textscale (float)
+		textstyle (enum ?)
+		text font (enum ?)
+		textalign (enum ? )
+		background (texture name ?) 
+		exp (can be a variety of functions, multiple are allowed per itemDef)
+		visible (boolean)
+	}
+
+	multiple exp's (expressions?) can belong to one itemDef, and typically have the following functions
+		W(float) - dynamically calculate width
+		H(float) - dynamically calculate height
+		X(float) - dynamically calculate X-pos
+		Y(float) - dynamically calculate y-pos
+		text(string) - dynamically alter text
+
+	some formatting functions:
+		locString() - Grab localized string from key (key MUST start with "<str_filename>_" 
+			where <str_filename> is the name of the .str file that holds the key/value pair)
+		toUpper() - Capitalize first letter of each word in a string
+		dvarString() - get dvar value as a string
+		dvarBool() - get dvar value as a bool
+		dvarInt() - get dvar value as an int
+
+*/
+
+
+{
+
+	#define HUD_OFFSET 13.5
+
+	assetGlobalDef
+	{
+		fadeClamp						1
+		fadeCycle						1
+		fadeAmount						.1
+	}
+
+
+    menuDef 
+	{
+		name			"mod_timers"
+		rect 			-4 2 0 0 HORIZONTAL_ALIGN_USER_RIGHT VERTICAL_ALIGN_USER_TOP
+		fullscreen		0
+		visible			1
+
+		itemDef 
+		{
+			name		"strat_tester_version"
+			rect 		0 0 0 0
+			forecolor 	1 1 1 1
+			type 		ITEM_TYPE_TEXT
+			textstyle	ITEM_TEXTSTYLE_SHADOWED
+			textscale 	TEXTSIZE_TITLE
+			textfont	UI_FONT_EXTRABIG
+			textalign	ITEM_ALIGN_TOP_RIGHT
+			exp			rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9))
+			exp			text("Strat Tester " + dvarString("st_version"));
+			visible		1	
+		}
+
+		itemDef
+		{
+			name				"total_timer"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0
+			exp					rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + 25)
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_RIGHT
+			exp 				text(locString("MOD_GAME_TIME") + dvarString("hud_total_time"))
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name		"level_timer"
+			rect 		0 0 0 0
+			exp			rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + (1 * HUD_OFFSET) + 25)
+			forecolor 	1 1 1 1
+			type 		ITEM_TYPE_TEXT
+			textstyle	ITEM_TEXTSTYLE_SHADOWED
+			textscale 	TEXTSIZE_DEFAULT
+			textfont	UI_FONT_NORMAL
+			textalign	ITEM_ALIGN_TOP_RIGHT
+			exp			text(locString("MOD_LEVEL_TIME") + dvarString("hud_level_time"))
+			visible 	1
+			decoration
+		}
+	}
+
+}

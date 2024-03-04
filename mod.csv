@@ -1,0 +1,14 @@
+//MENU
+menufile,ui/cst.menu
+menufile,ui/hud.menu
+menufile,ui/hud.txt
+
+//GENERAL SCRIPTS
+rawfile,maps/_cst_util.gsc
+rawfile,maps/cuba.gsc
+rawfile,maps/cuba_bar.gsc
+rawfile,maps/vorkuta.gsc
+rawfile,maps/vorkuta_mine.gsc
+
+//STRINGS
+localize,mod
