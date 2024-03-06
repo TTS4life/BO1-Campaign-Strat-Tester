@@ -82,12 +82,27 @@
 			visible		1	
 		}
 
+		itemDef 
+		{
+			name		"difficulty"
+			rect 		0 0 0 0
+			forecolor 	1 1 1 1
+			type 		ITEM_TYPE_TEXT
+			textstyle	ITEM_TEXTSTYLE_SHADOWED
+			textfont	UI_FONT_NORMAL
+			textscale 	TEXTSIZE_DEFAULT
+			textalign	ITEM_ALIGN_TOP_RIGHT
+			exp			rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + 25)
+			exp 		text("Difficulty: " + locString( "@MOD_" + dvarString("currentDifficulty")))
+			visible 	1
+		}
+
 		itemDef
 		{
 			name				"total_timer"
 			type				ITEM_TYPE_TEXT
 			rect 				0 0 0 0
-			exp					rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + 25)
+			exp					rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + (1 * HUD_OFFSET) + 25)
 			forecolor			1 1 1 1
 			textscale			TEXTSIZE_DEFAULT
 			textstyle			ITEM_TEXTSTYLE_SHADOWED
@@ -102,7 +117,7 @@
 		{
 			name		"level_timer"
 			rect 		0 0 0 0
-			exp			rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + (1 * HUD_OFFSET) + 25)
+			exp			rect Y(2 + (dvarInt("cg_drawFPS") * 18) + (dvarInt("cg_drawFPS") * dvarInt("onlinegame") * 9) + (2 * HUD_OFFSET) + 25)
 			forecolor 	1 1 1 1
 			type 		ITEM_TYPE_TEXT
 			textstyle	ITEM_TEXTSTYLE_SHADOWED
@@ -114,5 +129,222 @@
 			decoration
 		}
 	}
+
+	menuDef 
+	{
+		name "sprintMeter"
+		fullScreen MENU_FALSE
+		//visible when(dvarInt(st_hud_drawsprint) > 0)
+		visible 1
+		rect 0 0 40 10 HORIZONTAL_ALIGN_CENTER VERTICAL_ALIGN_CENTER
+
+		itemDef 
+		{
+			name "sprintRect"
+			type			ITEM_TYPE_OWNERDRAW
+			visible MENU_TRUE
+			rect 0 0 62 4
+			background "white"
+			forecolor 0.0 0.0 0.0 .8
+			backcolor 0.0 0.0 0.0 .8
+			ownerdraw CG_PLAYER_SPRINT_BACK
+			decoration
+			exp rect W(62 * (dvarInt("has_longersprint") + 1))
+			exp rect X(-62 * (dvarInt("has_longersprint") + 1) / 2)
+			exp rect Y(30 + ((dvarInt(st_hud_drawsprint) - 1) * 135))
+		}
+
+		itemDef 
+		{
+			name "sprintRect"
+			type			ITEM_TYPE_OWNERDRAW
+			visible MENU_TRUE
+			rect 1 0 60 2
+			background		"white"
+			forecolor 0.6 0.6 0.6 .8
+			ownerdraw CG_PLAYER_SPRINT_METER
+			decoration
+			exp rect X(-60 * (dvarInt("has_longersprint") + 1) / 2)
+			exp rect Y(30 + ((dvarInt(st_hud_drawsprint) - 1) * 135) + 1)
+		}
+	}
+
+	#define HEALTH_BAR_W	111
+	#define HEALTH_BAR_H	5
+	#define HEALTH_VALUE_X	(HEALTH_BAR_W + 5.5)
+	#define HEALTH_VALUE_Y	(HEALTH_Y + 10.2)
+	#define HEALTH_Y		-107
+	#define HEALTH_X		1.5
+	#define HEALTH_BOARDER	(HEALTH_X * 2)
+
+	menuDef
+	{
+		name				"health_bar"
+		rect				0 0 0 0 HORIZONTAL_ALIGN_USER_LEFT VERTICAL_ALIGN_USER_BOTTOM
+		fullscreen			0
+		//visible				when(dvarString("st_hud_zone_health_bar") == "health" || dvarString("st_hud_zone_health_bar") == "both")
+		visible 1
+
+		itemDef
+		{
+			name				"health_bar_background_image"
+			type				ITEM_TYPE_IMAGE
+			style				WINDOW_STYLE_SHADER
+			rect				0 HEALTH_Y (HEALTH_BAR_W + HEALTH_BOARDER) (HEALTH_BAR_H + HEALTH_BOARDER)
+			foreColor			0 0 0 0.35
+			background			"black"
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"health_bar_image"
+			type				ITEM_TYPE_IMAGE
+			style				WINDOW_STYLE_SHADER
+			rect				HEALTH_X (HEALTH_Y + HEALTH_X) HEALTH_BAR_W HEALTH_BAR_H
+			exp					rect W(dvarInt("st_hud_health_bar_width"))
+			foreColor			1 1 1 0.85
+			background			"white"
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"health_bar_value"
+			type				ITEM_TYPE_TEXT
+			rect 				HEALTH_VALUE_X HEALTH_VALUE_Y 0 0
+			foreColor			1 1 1 1
+			textScale			TEXTSIZE_SMALL
+			textStyle			ITEM_TEXTSTYLE_SHADOWED
+			textFont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_LEFT
+			exp					text(dvarInt("st_hud_health_bar_value"))
+			visible				1
+			decoration
+		}
+	}
+
+	menuDef
+	{
+		name				"practice_stats"
+		rect				4 28 0 0 HORIZONTAL_ALIGN_USER_LEFT VERTICAL_ALIGN_USER_TOP //x-pos y-pos width height horizontal_alignment vertical_alignmnet
+		fullscreen			0
+		visible				1
+
+		itemDef
+		{
+			name				"xang"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("X ANG: " + dvarInt("st_hud_xang"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50)
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"yang"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("Y ANG: " + dvarInt("st_hud_yang"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50 + (HUD_OFFSET * 1))
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"zang"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("Z ANG: " + dvarInt("st_hud_zang"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50 + (HUD_OFFSET * 2))
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"xpos"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("X POS: " + dvarInt("st_hud_xpos"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50 + (HUD_OFFSET * 3))
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"ypos"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("Y POS: " + dvarInt("st_hud_ypos"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50 + (HUD_OFFSET * 4))
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"zpos"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("Z POS: " + dvarInt("st_hud_zpos"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50 + (HUD_OFFSET * 5))
+			visible				1
+			decoration
+		}
+
+		itemDef
+		{
+			name				"pspeed"
+			type				ITEM_TYPE_TEXT
+			rect 				0 0 0 0			
+			forecolor			1 1 1 1
+			textscale			TEXTSIZE_DEFAULT
+			textstyle			ITEM_TEXTSTYLE_SHADOWED
+			textfont			UI_FONT_NORMAL
+			textalign			ITEM_ALIGN_TOP_LEFT
+			exp 				text("SPEED: " + dvarInt("st_hud_pspeed"))	
+			exp 				rect Y(dvarInt(st_hud_command_print_offset) * 50 + (HUD_OFFSET * 6))
+			visible				1
+			decoration
+		}
+	}
+
 
 }

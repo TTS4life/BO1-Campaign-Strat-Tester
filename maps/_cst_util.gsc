@@ -11,6 +11,9 @@ main() {
 	// level thread update_level_time();
     level thread update_game_time();
 
+	level thread health_bar_hud();
+	level thread player_angles_hud();
+
 	
 }
 
@@ -52,7 +55,7 @@ update_game_time() {
 get_previous_mission_times() {
 	
 	if (level.script == "cuba") {
-		return;
+		return 0;
 	}
 
 	if(level.script == "vorkuta") {
@@ -87,4 +90,59 @@ seconds_to_string(time) {
 	time = minutes + ":" + seconds + "." + milliseconds;
 
 	return time;
+}
+
+health_bar_hud()
+{
+	health_bar_width_max = 110;
+	p = get_players()[0];
+
+	while (1)
+	{
+		health_ratio = p.health / p.maxhealth;
+
+		p SetClientDvar("st_hud_health_bar_value", p.health);
+		p SetClientDvar("st_hud_health_bar_width", health_bar_width_max * health_ratio);
+
+		wait 0.05;
+		
+	}
+}
+
+player_angles_hud() {
+	player = get_players()[0];
+	while(1) {
+		angles = player getPlayerAngles();
+		player setClientDvar("st_hud_xang", angles[0]);
+		player setClientDvar("st_hud_yang", angles[1]);
+		player setClientDvar("st_hud_zang", angles[2]);
+
+		pos = player getOrigin();
+		player setClientDvar("st_hud_xpos", pos[0]);
+		player setClientDvar("st_hud_ypos", pos[1]);
+		player setClientDvar("st_hud_zpos", pos[2]);
+
+		speed = 0;
+		speed = player getVelocity();
+		// iprintln("Speed: " + speed);
+
+		speed = sqrt( pow(speed[0], 2) + pow(speed[1], 2) + pow(speed[2], 2) );
+		player setClientDvar("st_hud_pspeed", speed);
+
+		wait(.05);
+	}
+}
+
+pow( base, exp )
+{
+	if(exp < 0) {
+		return -1;
+	}
+
+	if ( exp == 0 )
+	{
+		return 1;
+	}
+		
+	return base * pow( base, exp - 1 );
 }

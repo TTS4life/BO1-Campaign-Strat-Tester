@@ -88,7 +88,7 @@ main()
 	
 	battlechatter_on();
 
-	maps\_cst_util::main();
+	// maps\_cst_util::main();
 }
 
 
