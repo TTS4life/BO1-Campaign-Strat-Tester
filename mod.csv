@@ -9,6 +9,20 @@ rawfile,maps/cuba.gsc
 rawfile,maps/cuba_bar.gsc
 rawfile,maps/vorkuta.gsc
 rawfile,maps/vorkuta_mine.gsc
+rawfile,maps/creek_1_start.gsc
+rawfile,maps/flashpoint_e1.gsc
+rawfile,maps/frontend.gsc
+rawfile,maps/fullahead.gsc
+rawfile,maps/hue_city_event1.gsc
+rawfile,maps/khe_sanh.gsc
+rawfile,maps/pentagon.gsc
+rawfile,maps/pow.gsc
+rawfile,maps/rebirth.gsc
+rawfile,maps/river_drive.gsc
+rawfile,maps/wmd.gsc
+rawfile,maps/int_escape.gsc
+rawfile,maps/underwaterbase_introigc.gsc
+
 
 //STRINGS
 localize,mod
